@@ -1,11 +1,16 @@
-FROM python:3.9
+FROM python:3.11
 
-# Set environment varibles
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install dependencies
 RUN pip install --upgrade pip
-COPY requirements.txt /app/
+RUN pip install --upgrade poetry
+
 WORKDIR /app
-RUN pip install Django>=3,<4
+
+COPY pyproject.toml ./
+COPY poetry.lock ./
+
+RUN poetry install --no-root --only main
