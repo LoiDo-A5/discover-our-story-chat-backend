@@ -9,11 +9,11 @@ class UserFactory(FactoryBase):
     class Meta:
         model = User
 
-    username = factory.Sequence(lambda n: f'email{n}@eoh.io')
+    username = factory.Sequence(lambda n: f'email{n}@io')
     birthday = factory.Faker('date')
     phone_number = factory.Sequence(lambda n: str(n).zfill(10))
     is_phone_verified = True
-    email = factory.Sequence(lambda n: f'email{n}@eoh.io')
+    email = factory.Sequence(lambda n: f'email{n}@io')
     name = factory.Faker('name')
     password = factory.Faker('password')
     time_zone = 'Asia/Ho_Chi_Minh'
