@@ -1,8 +1,7 @@
-from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'email', 'phone_number')
-    list_filter = ('name', 'email')
-    search_fields = ('name', 'email', 'phone_number')
-    exclude = ('first_name', 'last_name',)
+class UserAdmin(BaseUserAdmin):
+    list_display = ('id', 'username', 'email', 'phone_number', 'first_name', 'last_name')
+    list_filter = ('username', 'email')
+    search_fields = ('username', 'email', 'phone_number')
