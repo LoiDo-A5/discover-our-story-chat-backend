@@ -67,7 +67,12 @@ class RegisterPhoneApi(GenericAPIView):
             error_message = gettext('Phone number or email already exists')
             return Response({'error': error_message}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer.save()
+        User.objects.create(
+            username=serializer.validated_data['phone_number'],
+            email=serializer.validated_data['email'],
+            password=serializer.validated_data['password'],
+            time_zone=serializer.validated_data.get('time_zone', 'Asia/Ho_Chi_Minh'),
+        )
 
         return Response(
             {
