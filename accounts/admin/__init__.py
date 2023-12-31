@@ -7,6 +7,5 @@ from accounts.models import User
 
 admin.site.register(User, UserAdmin)
 
-
 admin.site.unregister(TokenProxy)
 admin.site.register(TokenProxy, FilterTokenAdmin)

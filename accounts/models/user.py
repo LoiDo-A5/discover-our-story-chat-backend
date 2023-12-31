@@ -10,3 +10,4 @@ class User(AbstractUser):
     birthday = models.DateField(null=True, blank=True)
     is_phone_verified = models.BooleanField(default=False)
     time_zone = models.CharField(max_length=50, default='Asia/Ho_Chi_Minh', blank=True)
+    avatar = models.ImageField(null=True, blank=True)
