@@ -161,5 +161,5 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_CLASSES': (
         'rest_framework.throttling.ScopedRateThrottle',
     ),
-    'EXCEPTION_HANDLER': 'common.api_exception_handler.custom_exception_handler',
+    # 'EXCEPTION_HANDLER': 'common.api_exception_handler.custom_exception_handler',
 }
