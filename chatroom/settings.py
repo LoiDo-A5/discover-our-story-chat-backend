@@ -163,3 +163,15 @@ REST_FRAMEWORK = {
     ),
     # 'EXCEPTION_HANDLER': 'common.api_exception_handler.custom_exception_handler',
 }
+
+
+ASGI_APPLICATION = 'chatroom.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+

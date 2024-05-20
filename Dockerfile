@@ -7,6 +7,7 @@ ENV PYTHONUNBUFFERED 1
 # Install dependencies
 RUN pip install --upgrade pip
 RUN pip install --upgrade poetry
+RUN pip install psycopg2-binary
 
 WORKDIR /app
 
