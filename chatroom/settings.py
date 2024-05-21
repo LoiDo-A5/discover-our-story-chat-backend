@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': 'mydatabase',
         'USER': 'myuser',
         'PASSWORD': 'mypassword',
-        'HOST': 'db',  # Name of the service in docker-compose.yml
+        'HOST': os.getenv('DB_HOST', 'db'),  # Fallback to 'db' if not specified
         'PORT': '5432',
     }
 }
