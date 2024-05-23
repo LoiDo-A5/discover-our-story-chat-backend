@@ -1,8 +1,14 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
 import logging
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
+from accounts.models import ChatRoom, Message
 
 logger = logging.getLogger(__name__)
+User = get_user_model()
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -30,6 +36,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         logger.info(f"Received data: {text_data}")
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+        username = text_data_json['username']  # Ensure this is being sent from the client
+
+        # Save the message to the database asynchronously
+        await self.save_message(username, message)
 
         # Send message to room group
         await self.channel_layer.group_send(
@@ -41,10 +51,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     async def chat_message(self, event):
-        logger.info(f"Send message: {event}")
         message = event['message']
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message
         }))
+
+    @database_sync_to_async
+    def save_message(self, username, content):
+        try:
+            user = User.objects.get(username=username)
+            room = ChatRoom.objects.get(name=self.room_name)
+            Message.objects.create(room=room, sender=user, content=content, timestamp=timezone.now())
+        except ObjectDoesNotExist as e:
+            logger.error(f"Error saving message: {e}")
+            # Handle the error appropriately, possibly notifying the user
+            # For instance, you could raise an exception or return a specific message
+            return False

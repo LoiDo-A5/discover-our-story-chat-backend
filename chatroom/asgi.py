@@ -8,14 +8,17 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/asgi/
 """
 
 import os
+import django
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from django.urls import path
 
-from accounts.api.consumers import ChatConsumer
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "chatroom.settings")
+django.setup()
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chatroom.settings')
+# Đảm bảo import sau khi setup
+from accounts.api.consumers import ChatConsumer
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
@@ -25,3 +28,4 @@ application = ProtocolTypeRouter({
         ])
     ),
 })
+
