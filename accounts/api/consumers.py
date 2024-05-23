@@ -56,6 +56,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             user = User.objects.get(username=username)
             room = ChatRoom.objects.get(id=self.room_id)
             Message.objects.create(room=room, sender=user, content=content, timestamp=timezone.now())
+
         except ObjectDoesNotExist as e:
             logger.error(f"Error saving message: {e}")
             return False
