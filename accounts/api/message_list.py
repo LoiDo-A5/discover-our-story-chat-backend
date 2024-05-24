@@ -26,12 +26,10 @@ class ListMessage(ListAPIView):
 
     def get_queryset(self):
         room_id = self.request.query_params.get('room_id')
-        logger.info(f"room_id {room_id}")
         if room_id:
             queryset = Message.objects.filter(room_id=room_id)
         else:
             queryset = Message.objects.none()
-        logger.info(f"queryset {queryset}")
         return queryset
 
     def list(self, request, *args, **kwargs):
