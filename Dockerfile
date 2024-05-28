@@ -7,11 +7,13 @@ ENV PYTHONUNBUFFERED 1
 # Install dependencies
 RUN pip install --upgrade pip
 RUN pip install --upgrade poetry
-RUN pip install psycopg2-binary
 
 WORKDIR /app
 
-COPY pyproject.toml ./
-COPY poetry.lock ./
+COPY pyproject.toml poetry.lock ./
 
-RUN poetry install --no-root --only main
+RUN poetry install --no-root
+
+COPY . .
+
+CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]

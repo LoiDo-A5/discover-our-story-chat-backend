@@ -18,6 +18,7 @@ services:
       - redis
     networks:
       - backend
+    restart: always
 
   db:
     image: postgres:latest
@@ -30,6 +31,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - backend
+    restart: always
 
   redis:
     image: redis:latest
@@ -39,6 +41,7 @@ services:
       - ./redis.conf:/usr/local/etc/redis/redis.conf
     networks:
       - backend
+    restart: always
 
 volumes:
   postgres_data:
@@ -46,3 +49,4 @@ volumes:
 networks:
   backend:
     driver: bridge
+
