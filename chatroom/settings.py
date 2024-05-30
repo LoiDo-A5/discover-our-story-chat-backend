@@ -195,9 +195,7 @@ LOGGING = {
 }
 
 
-CORS_ORIGIN_WHITELIST = [
-    'http://wechatdoloibucket.s3-website-ap-southeast-1.amazonaws.com',
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -211,11 +209,4 @@ CORS_ALLOW_METHODS = [
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
 ]
