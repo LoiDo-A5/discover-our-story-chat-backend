@@ -36,19 +36,27 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = data['message']
         username = data['username']
 
-        await self.save_message(username, message)
+        user = await self.save_message(username, message)
 
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message
+        if user:
+            user_info = {
+                'id': user.id,
+                'email': user.email,
+                'name': user.name,
             }
-        )
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message,
+                    'user': user_info
+                }
+            )
 
     async def chat_message(self, event):
         message = event['message']
-        await self.send(text_data=json.dumps({'message': message}))
+        user = event['user']
+        await self.send(text_data=json.dumps({'message': message, 'user': user}))
 
     @database_sync_to_async
     def save_message(self, username, content):
@@ -56,7 +64,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             user = User.objects.get(username=username)
             room = ChatRoom.objects.get(id=self.room_id)
             Message.objects.create(room=room, sender=user, content=content, timestamp=timezone.now())
-
+            return user
         except ObjectDoesNotExist as e:
             logger.error(f"Error saving message: {e}")
-            return False
+            return None
