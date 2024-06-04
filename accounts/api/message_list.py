@@ -27,7 +27,7 @@ class ListMessage(ListAPIView):
     def get_queryset(self):
         room_id = self.request.query_params.get('room_id')
         if room_id:
-            queryset = Message.objects.filter(room_id=room_id)
+            queryset = Message.objects.filter(room_id=room_id).order_by('timestamp')
         else:
             queryset = Message.objects.none()
         return queryset
