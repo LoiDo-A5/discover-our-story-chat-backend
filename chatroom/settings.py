@@ -42,7 +42,14 @@ INSTALLED_APPS = [
 
     'accounts',
     'corsheaders',
+    'storages',
 ]
+
+AWS_ACCESS_KEY_ID = 'AKIAYS2NXKC52JRLEVUN'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'discoverourstory-images'
+AWS_S3_REGION_NAME = 'ap-southeast-1'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -164,7 +171,6 @@ REST_FRAMEWORK = {
     # 'EXCEPTION_HANDLER': 'common.api_exception_handler.custom_exception_handler',
 }
 
-
 ASGI_APPLICATION = 'chatroom.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
@@ -174,7 +180,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
 
 LOGGING = {
     'version': 1,
