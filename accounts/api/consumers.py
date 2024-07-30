@@ -43,6 +43,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'id': user.id,
                 'email': user.email,
                 'name': user.name,
+                'avatar': user.avatar.url if user.avatar and hasattr(user.avatar, 'url') else None
             }
             await self.channel_layer.group_send(
                 self.room_group_name,
