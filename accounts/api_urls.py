@@ -1,5 +1,6 @@
 from rest_framework import routers
 from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from accounts.api.chatroom_list import ChatRoomList
 from accounts.api.login_api import LoginApi
@@ -13,6 +14,7 @@ urlpatterns = [
     path('me/', MeApi.as_view()),
     path('rooms/', ChatRoomList.as_view(), name='rooms'),
     path('messages/', ListMessage.as_view(), name='messages'),
+    path('token/refresh/', TokenRefreshView.as_view()),
 ]
 
 router = routers.SimpleRouter()
