@@ -1,12 +1,17 @@
 from rest_framework import routers
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework.routers import SimpleRouter
 
 from accounts.api.chatroom_list import ChatRoomList
+from accounts.api.friendship_api import FriendshipViewSet
 from accounts.api.login_api import LoginApi
 from accounts.api.me import MeApi
 from accounts.api.message_list import ListMessage
 from accounts.api.register_phone import RegisterPhoneApi
+
+router = SimpleRouter()
+router.register(r'friendship', FriendshipViewSet)
 
 urlpatterns = [
     path('login/', LoginApi.as_view()),
