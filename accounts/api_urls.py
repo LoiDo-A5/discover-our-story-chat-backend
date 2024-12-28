@@ -9,6 +9,7 @@ from accounts.api.login_api import LoginApi
 from accounts.api.me import MeApi
 from accounts.api.message_list import ListMessage
 from accounts.api.register_phone import RegisterPhoneApi
+from accounts.api.users import UserListApi
 
 router = SimpleRouter()
 router.register(r'friendship', FriendshipViewSet, basename='friendship')
@@ -20,6 +21,7 @@ urlpatterns = [
     path('rooms/', ChatRoomList.as_view(), name='rooms'),
     path('messages/', ListMessage.as_view(), name='messages'),
     path('token/refresh/', TokenRefreshView.as_view()),
+    path('list_user/', UserListApi.as_view(), name='list_user'),
 ]
 
 router = routers.SimpleRouter()
