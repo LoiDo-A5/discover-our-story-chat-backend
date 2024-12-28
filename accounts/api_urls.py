@@ -11,7 +11,7 @@ from accounts.api.message_list import ListMessage
 from accounts.api.register_phone import RegisterPhoneApi
 
 router = SimpleRouter()
-router.register(r'friendship', FriendshipViewSet)
+router.register(r'friendship', FriendshipViewSet, basename='friendship')
 
 urlpatterns = [
     path('login/', LoginApi.as_view()),
