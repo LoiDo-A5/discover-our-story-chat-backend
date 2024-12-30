@@ -1,4 +1,3 @@
-from rest_framework import routers
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.routers import SimpleRouter
@@ -24,4 +23,4 @@ urlpatterns = [
     path('list_user/', UserListApi.as_view(), name='list_user'),
 ]
 
-router = routers.SimpleRouter()
+urlpatterns += router.urls
