@@ -5,7 +5,7 @@ import logging
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
-from accounts.models import ChatRoom, Message
+from accounts.models import ChatRoom, Message, DirectMessage
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -13,10 +13,9 @@ User = get_user_model()
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        self.chat_type = self.scope['url_route']['kwargs']['chat_type']
         self.room_id = self.scope['url_route']['kwargs']['room_id']
-        self.room_group_name = f'chat_{self.room_id}'
-
-        logger.info(f"WebSocket connected to room ID: {self.room_id}")
+        self.room_group_name = f"{self.chat_type}_{self.room_id}"
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -34,9 +33,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data['message']
-        username = data['username']
+        sender_id = data['sender_id']
 
-        user = await self.save_message(username, message)
+        if self.chat_type == "room":
+            user = await self.save_room_message(sender_id, message)
+        else:  # chat_type == "dm"
+            receiver_id = data['receiver_id']
+            user = await self.save_direct_message(sender_id, receiver_id, message)
 
         if user:
             user_info = {
@@ -60,12 +63,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({'message': message, 'user': user}))
 
     @database_sync_to_async
-    def save_message(self, username, content):
+    def save_room_message(self, sender_id, content):
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(id=sender_id)
             room = ChatRoom.objects.get(id=self.room_id)
             Message.objects.create(room=room, sender=user, content=content, timestamp=timezone.now())
             return user
         except ObjectDoesNotExist as e:
-            logger.error(f"Error saving message: {e}")
+            logger.error(f"Error saving room message: {e}")
+            return None
+
+    @database_sync_to_async
+    def save_direct_message(self, sender_id, receiver_id, content):
+        try:
+            sender = User.objects.get(id=sender_id)
+            receiver = User.objects.get(id=receiver_id)
+            DirectMessage.objects.create(sender=sender, receiver=receiver, content=content, timestamp=timezone.now())
+            return sender
+        except ObjectDoesNotExist as e:
+            logger.error(f"Error saving direct message: {e}")
             return None
