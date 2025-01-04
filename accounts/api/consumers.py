@@ -15,7 +15,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.chat_type = self.scope['url_route']['kwargs']['chat_type']
         self.room_id = self.scope['url_route']['kwargs']['room_id']
-        self.room_group_name = f"{self.chat_type}_{self.room_id}"
+
+        if self.chat_type == "dm":
+            sender_id, receiver_id = map(int, self.room_id.split('_'))
+            self.room_group_name = f"dm_{min(sender_id, receiver_id)}_{max(sender_id, receiver_id)}"
+        else:
+            self.room_group_name = f"{self.chat_type}_{self.room_id}"
 
         await self.channel_layer.group_add(
             self.room_group_name,
