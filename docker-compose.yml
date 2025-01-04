@@ -7,6 +7,7 @@ services:
     working_dir: /app
     volumes:
       - ./:/app
+      - /app/venv
     ports:
       - "8000:8000"
     command: ["poetry", "run", "daphne", "-p", "8000", "chatroom.asgi:application", "-b", "0.0.0.0"]
