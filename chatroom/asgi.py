@@ -17,7 +17,6 @@ from django.urls import path
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "chatroom.settings")
 django.setup()
 
-# Đảm bảo import sau khi setup
 from accounts.api.consumers import ChatConsumer
 
 application = ProtocolTypeRouter({

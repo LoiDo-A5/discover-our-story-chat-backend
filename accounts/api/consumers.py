@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from accounts.models import ChatRoom, Message, DirectMessage
+from accounts.utils.onesignal_utils import send_push_notification
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -45,6 +46,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         else:  # chat_type == "dm"
             receiver_id = data['receiver_id']
             user = await self.save_direct_message(sender_id, receiver_id, message)
+            if user and receiver_id:
+                await self.send_notification_to_receiver(sender_id, receiver_id, message)
 
         if user:
             user_info = {
@@ -88,3 +91,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except ObjectDoesNotExist as e:
             logger.error(f"Error saving direct message: {e}")
             return None
+
+    @database_sync_to_async
+    def get_receiver_name(self, receiver_id):
+        try:
+            user = User.objects.get(id=receiver_id)
+            return user.name
+        except User.DoesNotExist:
+            return None
+
+    async def send_notification_to_receiver(self, sender_id, receiver_id, message):
+        receiver_name = await self.get_receiver_name(receiver_id)
+        logger.info(f"receiver_id: {receiver_id}")
+
+        if receiver_name:
+            title = "New Message"
+            content = f"You have a new message from {receiver_name}: {message}"
+
+            await self.assign_tag_to_user(receiver_id)
+
+            send_push_notification(title, content, receiver_id)
+
+    @database_sync_to_async
+    def assign_tag_to_user(self, user_id):
+        try:
+            from accounts.utils.onesignal_utils import set_user_tag
+            set_user_tag(user_id=user_id)
+            logger.info(f"Tag assigned for user_id: {user_id}")
+        except Exception as e:
+            logger.error(f"Error assigning tag for user_id: {user_id} - {e}")

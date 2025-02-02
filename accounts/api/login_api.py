@@ -34,7 +34,6 @@ class LoginApi(GenericAPIView):
                 }, status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Tạo access và refresh tokens
         refresh = RefreshToken.for_user(user)
         access = str(refresh.access_token)
 
