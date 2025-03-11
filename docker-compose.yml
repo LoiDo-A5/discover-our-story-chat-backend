@@ -3,7 +3,7 @@ version: '3'
 services:
   app:
     build: .
-    container_name: chatroom-web
+    container_name: manage-student-web
     working_dir: /app
     volumes:
       - ./:/app
@@ -21,7 +21,7 @@ services:
 
   db:
     image: postgres:latest
-    container_name: chatroom-db
+    container_name: manage-student-db
     environment:
       - POSTGRES_DB=mydatabase
       - POSTGRES_USER=myuser
@@ -33,7 +33,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: chatroom-redis
+    container_name: manage-student-redis
     command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
       - ./redis.conf:/usr/local/etc/redis/redis.conf
@@ -46,4 +46,3 @@ volumes:
 networks:
   backend:
     driver: bridge
-
