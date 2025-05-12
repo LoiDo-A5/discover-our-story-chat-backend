@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'accounts',
     'corsheaders',
     'storages',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
