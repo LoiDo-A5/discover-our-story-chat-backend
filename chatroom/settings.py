@@ -146,7 +146,7 @@ AUTH_USER_MODEL = 'accounts.User'
 SITE_ID = 1
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "http://18.142.34.79",
 ]
 
 AUTHENTICATION_BACKENDS = [
