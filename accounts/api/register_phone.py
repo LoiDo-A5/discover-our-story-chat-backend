@@ -11,6 +11,7 @@ class RegisterPhoneSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(min_length=10, max_length=15, source='phone_number')
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
+    name = serializers.CharField(max_length=20, required=True)
 
     class Meta:
         model = User
@@ -68,6 +69,7 @@ class RegisterPhoneApi(GenericAPIView):
             return Response({'error': error_message}, status=status.HTTP_400_BAD_REQUEST)
 
         User.objects.create(
+            name=serializer.validated_data['name'],
             username=serializer.validated_data['phone_number'],
             email=serializer.validated_data['email'],
             password=serializer.validated_data['password'],
