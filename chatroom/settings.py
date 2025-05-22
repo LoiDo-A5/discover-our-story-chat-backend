@@ -211,3 +211,9 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://discoverourstory.link",
+    "https://www.discoverourstory.link",
+    "http://localhost:3000",
+]
